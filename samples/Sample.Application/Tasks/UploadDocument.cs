@@ -12,6 +12,7 @@ public record UploadDocument : IRequest, IFileRequest
 
     [JsonIgnore]
     public IReadOnlyList<IFile> Files { get; set; }
+    public override string ToString() => $"UploadDocument({TaskId})";
 }
 public class UploadDocumentHandler(ApplicationContext context) : IRequestHandler<UploadDocument>
 {

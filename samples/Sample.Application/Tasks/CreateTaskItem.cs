@@ -14,5 +14,6 @@ public class CreateTaskItemHandler(ApplicationContext context) : IRequestHandler
     {
         var task = new TaskItem(command.TaskId, command.Title);
         await context.Tasks.AddAsync(task, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
     }
 }

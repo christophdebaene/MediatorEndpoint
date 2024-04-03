@@ -8,7 +8,7 @@ namespace Sample.Application.Tasks;
 public record GetTaskDetail(Guid TaskId) : IRequest<TaskDetailModel>
 {
 }
-public record TaskDetailModel(Guid Id, string Title, TaskPriority Priority, bool IsCompleted)
+public record TaskDetailModel(Guid Id, string Title, TaskPriority Priority, bool IsCompleted, int NumberDocuments)
 {
 }
 public class GetTodoDetailHandler(ApplicationContext context) : IRequestHandler<GetTaskDetail, TaskDetailModel>
@@ -16,6 +16,6 @@ public class GetTodoDetailHandler(ApplicationContext context) : IRequestHandler<
     public async Task<TaskDetailModel> Handle(GetTaskDetail request, CancellationToken cancellationToken)
     {
         var task = await context.Tasks.FindAsync([request.TaskId], cancellationToken);
-        return new TaskDetailModel(task.Id, task.Title, task.Priority, task.IsCompleted);
+        return new TaskDetailModel(task.Id, task.Title, task.Priority, task.IsCompleted, task.Documents.Count());
     }
 }

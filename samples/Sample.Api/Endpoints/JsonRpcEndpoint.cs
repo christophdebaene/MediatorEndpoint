@@ -18,6 +18,7 @@ public static class JsonRpcEndpoint
             try
             {
                 var message = endpoint.CreateMessage(context);
+                Console.WriteLine(message.ToString());
                 var response = await sender.Send(message, cancellationToken);
                 return JsonRpcResults.Response(endpoint.Request.Id, response);
             }
