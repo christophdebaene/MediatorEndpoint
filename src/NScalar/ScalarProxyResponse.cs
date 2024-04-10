@@ -11,7 +11,7 @@ public class ScalarProxyResponse
     public ScalarProxyHeader Headers { get; set; }
 
     [JsonPropertyName("data")]
-    public object Data { get; set; }
+    public object? Data { get; set; }
 }
 public record ScalarProxyHeader
 {

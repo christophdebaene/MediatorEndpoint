@@ -16,5 +16,5 @@ public class EndpointCatalog
         _lookupByType = Endpoints.ToDictionary(x => x.RequestType);
         _lookupByContract = Endpoints.ToDictionary(x => x.Name.ToString());
     }
-    public bool Exist(string name) => _lookupByContract.ContainsKey(name);
+    public bool Exist(string? name) => !string.IsNullOrEmpty(name) && _lookupByContract.ContainsKey(name);
 }

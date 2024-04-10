@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MediatorEndpoint.JsonRpc.Internal;
-internal static class HttpRequestExtensions
+internal static class HttpExtensions
 {
-    public static async Task<IEnumerable<IFormFile>> BindFilesAsync(this HttpRequest request)
+    public static async Task<IReadOnlyList<IFormFile>> BindFilesAsync(this HttpRequest request)
     {
         var files = new List<IFormFile>();
 

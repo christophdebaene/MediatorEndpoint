@@ -1,4 +1,5 @@
 ﻿namespace NScalar;
+
 public class ScalarConfiguration
 {
     public string RoutePrefix { get; set; } = "/scalar";
@@ -9,5 +10,4 @@ public class ScalarConfiguration
 }
 public class ScalarOptions
 {
-
 }

@@ -4,10 +4,8 @@ using MediatR;
 namespace Sample.Application.Calculator;
 
 [Query]
-public class Add : IRequest<long>
+public record Add(long X, long Y) : IRequest<long>
 {
-    public long X { get; set; }
-    public long Y { get; set; }
 }
 public class AddHandler : IRequestHandler<Add, long>
 {

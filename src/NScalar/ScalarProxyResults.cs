@@ -4,7 +4,7 @@ namespace NScalar;
 
 public static class ScalarProxyResults
 {
-    public static IResult Ok(object data) => Results.Json(new ScalarProxyResponse
+    public static IResult Ok(object? data) => Results.Json(new ScalarProxyResponse
     {
         Status = 200,
         Headers = new ScalarProxyHeader

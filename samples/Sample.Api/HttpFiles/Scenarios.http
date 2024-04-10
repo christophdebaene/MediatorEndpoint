@@ -1,0 +1,78 @@
+@Api_HostAddress = http://localhost:5075/jsonrpc
+
+### NoResponse
+POST {{Api_HostAddress}}
+Content-Type: application/json
+
+{
+  "id": "{{$guid}}",
+  "jsonrpc": "2.0",
+  "method": "MyApp.Scenarios.NoResponse",
+  "params": {
+    "Id": "{{$guid}}"
+  }
+}
+
+### NoParams
+POST {{Api_HostAddress}}
+Content-Type: application/json
+
+{
+  "id": "{{$guid}}",
+  "jsonrpc": "2.0",
+  "method": "MyApp.Scenarios.NoParams"
+}
+
+### JsonResponseRequest
+POST {{Api_HostAddress}}
+Content-Type: application/json
+
+{
+  "id": "{{$guid}}",
+  "jsonrpc": "2.0",
+  "method": "MyApp.Scenarios.JsonResponseRequest"
+}
+
+### UploadFiles
+POST {{Api_HostAddress}}
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="jsonrpc"
+Content-type: application/json
+
+{
+  "id": "{{$guid}}",
+  "jsonrpc": "2.0",
+  "method": "MyApp.Scenarios.UploadFiles",
+  "params": {
+    "SetName": "MySet"
+  }
+}
+
+--boundary
+Content-Disposition: form-data; name="files"; filename="Document1.txt"
+Content-type: text/plain
+
+< Document1.txt
+
+--boundary
+Content-Disposition: form-data; name="files"; filename="Document2.txt"
+Content-type: text/plain
+
+< Document2.txt
+--boundary--
+
+### DownloadFile
+POST {{Api_HostAddress}}
+Content-Type: application/json
+
+{
+  "id": "{{$guid}}",
+  "jsonrpc": "2.0",
+  "method": "MyApp.Scenarios.DownloadFile",
+  "params": {
+    "SetName": "MySet",
+    "Filename": "Document2.txt"
+  }
+}

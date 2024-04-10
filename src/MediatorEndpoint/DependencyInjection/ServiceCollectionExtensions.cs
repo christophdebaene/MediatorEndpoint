@@ -24,7 +24,7 @@ public static class ServiceCollectionExtensions
         if (configuration.VerifyRequestType)
         {
             foreach (var request in endpoints.Where(x => RequestTypeAttribute.Get(x.RequestType) == RequestType.Unknown))
-                throw new System.Exception($"Request {request} is unknown");
+                throw new Exception($"Request {request} is unknown");
         }
 
         var typeCatalog = new EndpointCatalog(endpoints);

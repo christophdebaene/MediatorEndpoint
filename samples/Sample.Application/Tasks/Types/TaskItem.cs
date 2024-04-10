@@ -7,5 +7,4 @@ public class TaskItem(Guid id, string title)
     public DateTime? DueDate { get; set; } = DateTime.UtcNow.AddDays(1);
     public TaskPriority Priority { get; set; } = TaskPriority.Medium;
     public bool IsCompleted { get; set; } = false;
-    public List<Guid> Documents { get; set; } = [];
 }

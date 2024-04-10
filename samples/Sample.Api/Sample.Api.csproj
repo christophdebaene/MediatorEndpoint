@@ -18,8 +18,4 @@
     <ProjectReference Include="..\Sample.Application\Sample.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Behaviors\" />
-  </ItemGroup>
-
 </Project>

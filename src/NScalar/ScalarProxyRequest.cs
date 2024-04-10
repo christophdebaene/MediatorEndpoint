@@ -1,12 +1,18 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace NScalar;
-
 public class ScalarProxyRequest
 {
-    public string Method { get; set; }
+    [JsonPropertyName("method")]
+    [JsonConverter(typeof(HttpMethodJsonConverter))]
+    public HttpMethod Method { get; set; }
+
+    [JsonPropertyName("url")]
     public string Url { get; set; }
+
+    [JsonPropertyName("data")]
     public JsonElement Data { get; set; }
     public static async ValueTask<ScalarProxyRequest?> BindAsync(HttpContext context)
     {
@@ -15,34 +21,16 @@ public class ScalarProxyRequest
     }
 }
 
-/*
-public class ScalarProxyRequest : JsonRpcEndpointResult
+public class HttpMethodJsonConverter : JsonConverter<HttpMethod>
 {
-    public static async ValueTask<ScalarProxyRequest> BindAsync(HttpContext context)
+    public override HttpMethod? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        var serializerOptions = context.RequestServices.GetRequiredService<IOptions<JsonOptions>>().Value.SerializerOptions;
-        var catalog = context.RequestServices.GetRequiredService<EndpointCatalog>();
-
-        var body = await context.Request.ReadFromJsonAsync<ScalarProxyBody>();
-        var error = JsonRpcRequest.TryParse(body.Data.ToString(), serializerOptions, out JsonRpcRequest? request);
-
-        if (error is null)
-        {
-            return new ScalarProxyRequest
-            {
-                Error = null,
-                Endpoint = new JsonRpcEndpoint(catalog[request.Method].Name, catalog[request.Method].RequestType, request)
-            };
-        }
-        else
-        {
-            return new ScalarProxyRequest
-            {
-                Error = error,
-                Endpoint = null
-            };
-        }
+        var value = reader.GetString();
+        return string.IsNullOrEmpty(value) ? null : new HttpMethod(value);
     }
-    internal record ScalarProxyBody(string Method, string Url, JsonElement Data);
+
+    public override void Write(Utf8JsonWriter writer, HttpMethod value, JsonSerializerOptions options)
+    {
+        writer.WriteStringValue(value.ToString());
+    }
 }
-*/

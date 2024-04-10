@@ -80,12 +80,6 @@ internal class OpenApiFactory
                     }
                 },
                 */
-                {
-                    "x-jsonrpc", new JsonRpcExtension
-                    {
-                        isFileRequest = typeof(IFileRequest).IsAssignableFrom(request.RequestType)
-                    }
-                }
             }
         };
     }

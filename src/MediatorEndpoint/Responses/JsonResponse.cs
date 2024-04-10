@@ -1,6 +1,4 @@
 ﻿namespace MediatorEndpoint.Responses;
-
-public record JsonResponse(string? Content) : IResponse
+public record JsonResponse(string? Content) : TextResponse(Content, "application/json", null)
 {
-    public static readonly JsonResponse Null = new("null");
 }

@@ -4,39 +4,19 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 
 namespace MediatorEndpoint.JsonRpc;
-public class JsonRpcEndpointResult
+public class JsonRpcEndpointResult(JsonRpcEndpoint? Value, JsonRpcErrorResponse? ErrorResponse) : Result<JsonRpcEndpoint>(Value, ErrorResponse)
 {
-    public bool IsValid => Error is null;
-    public JsonRpcErrorResponse? Error { get; init; }
-    public JsonRpcEndpoint? Endpoint { get; init; }
     public static async ValueTask<JsonRpcEndpointResult> BindAsync(HttpContext context)
     {
         var result = await JsonRpcRequestResult.BindAsync(context);
-        if (result.Error is not null)
+        if (result.ErrorResponse is not null)
         {
-            return new JsonRpcEndpointResult
-            {
-                Error = result.Error
-            };
+            return new JsonRpcEndpointResult(null, result.ErrorResponse);
         }
 
-        var jsonRpcRequest = result.Request!;
+        var jsonRpcRequest = result.Value!;
 
         var catalog = context.RequestServices.GetRequiredService<EndpointCatalog>();
-        if (!catalog.Exist(jsonRpcRequest.Method))
-        {
-            return new JsonRpcEndpointResult
-            {
-                Error = JsonRpcErrorResponse.MethodNotFound(jsonRpcRequest.Id, jsonRpcRequest.Method)
-            };
-        }
-
-        var requestInfo = catalog[jsonRpcRequest.Method];
-
-        return new JsonRpcEndpointResult
-        {
-            Error = null,
-            Endpoint = new JsonRpcEndpoint(requestInfo.Name, requestInfo.RequestType, jsonRpcRequest)
-        };
+        return new JsonRpcEndpointResult(new JsonRpcEndpoint(catalog[jsonRpcRequest.Method!], jsonRpcRequest), result.ErrorResponse);
     }
 }

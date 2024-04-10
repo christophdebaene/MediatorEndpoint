@@ -10,14 +10,14 @@ public static class JsonRpcEndpoint
         {
             if (!endpointResult.IsValid)
             {
-                return JsonRpcResults.Response(endpointResult.Error);
+                return JsonRpcResults.Response(endpointResult.ErrorResponse);
             }
 
-            var endpoint = endpointResult.Endpoint;
+            var endpoint = endpointResult.Value!;
 
             try
             {
-                var message = endpoint.CreateMessage(context);
+                var message = await endpoint.CreateMessage(context);
                 Console.WriteLine(message.ToString());
                 var response = await sender.Send(message, cancellationToken);
                 return JsonRpcResults.Response(endpoint.Request.Id, response);
@@ -27,12 +27,7 @@ public static class JsonRpcEndpoint
                 var errorResponse = new JsonRpcErrorResponse
                 {
                     Id = endpoint.Request.Id,
-                    Error = new JsonRpcError
-                    {
-                        Code = JsonRpcErrorCode.InvalidRequest,
-                        Message = exc.Message,
-                        Data = exc.Data
-                    }
+                    Error = new JsonRpcError(JsonRpcErrorCode.InvalidRequest, exc.Message, exc.Data)
                 };
 
                 return JsonRpcResults.Response(errorResponse);

@@ -7,15 +7,15 @@ public record JsonRpcRequest
 {
     [JsonPropertyName("id")]
     [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
-    public string Id { get; set; }
+    public string? Id { get; set; }
 
     [JsonPropertyName("jsonrpc")]
     [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
-    public string JsonRpcVersion { get; set; }
+    public string? JsonRpcVersion { get; set; }
 
     [JsonPropertyName("method")]
     [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
-    public string Method { get; set; }
+    public string? Method { get; set; }
 
     [JsonPropertyName("params")]
     public JsonElement Params { get; set; }
@@ -25,7 +25,7 @@ public record JsonRpcRequest
         if (string.IsNullOrWhiteSpace(content))
         {
             request = null;
-            return JsonRpcErrorResponse.InvalidRequest(null, "");
+            return JsonRpcErrorResponse.InvalidRequest(null, "Body is empty");
         }
         try
         {

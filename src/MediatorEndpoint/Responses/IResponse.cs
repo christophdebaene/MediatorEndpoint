@@ -1,4 +1,4 @@
-﻿namespace MediatorEndpoint;
+﻿namespace MediatorEndpoint.Responses;
 public interface IResponse
 {
 }

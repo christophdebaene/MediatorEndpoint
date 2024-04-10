@@ -7,19 +7,16 @@ using System.Text.Json;
 namespace MediatorEndpoint.JsonRpc;
 public static class JsonRpcResults
 {
-    public static IResult Response(string id, object? response)
+    public static IResult Response(string id, object? response) => response switch
     {
-        return response switch
+        FileResponse fileResponse => Results.File(fileResponse.Data, fileResponse.ContentType, fileResponse.Filename),
+        JsonResponse jsonResponse => Response(id, jsonResponse),
+        _ => Results.Json(new JsonRpcResponse
         {
-            FileResponse fileResponse => Results.File(fileResponse.Data, fileResponse.ContentType, fileResponse.Filename),
-            JsonResponse jsonResponse => Response(id, jsonResponse),
-            _ => Results.Json(new JsonRpcResponse
-            {
-                Id = id,
-                Result = response
-            })
-        };
-    }
+            Id = id,
+            Result = response
+        })
+    };
     public static IResult Response(string id, JsonRpcError error) => Response(new JsonRpcErrorResponse
     {
         Id = id,

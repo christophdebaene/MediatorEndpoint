@@ -26,7 +26,6 @@ builder.Services.AddMediatorEndpoint(cfg =>
 });
 //builder.Services.AddJsonRpcOpenApi((config) => { });
 
-
 var app = builder.Build();
 app.UseScalar();
 //app.UseJsonRpcOpenApi();
