@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 namespace MediatorEndpoint.JsonRpc;
 public class JsonRpcEndpoint
 {
-    public EndpointInfo Info { get; init; }
+    public Metadata.Endpoint Endpoint { get; init; }
     public JsonRpcRequest Request { get; init; }
-    public JsonRpcEndpoint(EndpointInfo info, JsonRpcRequest request)
+    public JsonRpcEndpoint(Metadata.Endpoint endpoint, JsonRpcRequest request)
     {
-        Info = info;
+        Endpoint = endpoint;
         Request = request;
     }
     public async Task<object?> CreateMessage(HttpContext context)
@@ -24,8 +24,8 @@ public class JsonRpcEndpoint
         var serializerOptions = context.RequestServices.GetRequiredService<IOptions<JsonOptions>>().Value.SerializerOptions;
 
         var request = Request.Params.ValueKind == JsonValueKind.Undefined ?
-           Activator.CreateInstance(Info.RequestType) :
-           JsonSerializer.Deserialize(Request.Params, Info.RequestType, serializerOptions);
+           Activator.CreateInstance(Endpoint.RequestType) :
+           JsonSerializer.Deserialize(Request.Params, Endpoint.RequestType, serializerOptions);
 
         if (request is IHaveId iHaveId)
             iHaveId.Id = Request.Id;

@@ -16,7 +16,7 @@ public class JsonRpcEndpointResult(JsonRpcEndpoint? Value, JsonRpcErrorResponse?
 
         var jsonRpcRequest = result.Value!;
 
-        var catalog = context.RequestServices.GetRequiredService<EndpointCatalog>();
-        return new JsonRpcEndpointResult(new JsonRpcEndpoint(catalog[jsonRpcRequest.Method!], jsonRpcRequest), result.ErrorResponse);
+        var endpoints = context.RequestServices.GetRequiredService<IEndpointCollection>();
+        return new JsonRpcEndpointResult(new JsonRpcEndpoint(endpoints[jsonRpcRequest.Method!], jsonRpcRequest), result.ErrorResponse);
     }
 }

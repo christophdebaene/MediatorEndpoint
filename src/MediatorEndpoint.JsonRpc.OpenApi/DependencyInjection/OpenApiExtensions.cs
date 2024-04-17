@@ -1,13 +1,13 @@
-﻿using MediatorEndpoint.Metadata;
+﻿using MediatorEndpoint.JsonRpc.OpenApi;
+using MediatorEndpoint.Metadata;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NSwag;
 
-namespace MediatorEndpoint.JsonRpc.OpenApi;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class OpenApiExtensions
 {
@@ -31,9 +31,9 @@ public static class OpenApiExtensions
 
             configuration.Settings.SerializerOptions = serializerOptions;
 
-            var catalog = serviceProvider.GetRequiredService<EndpointCatalog>();
+            var endpoints = serviceProvider.GetRequiredService<IEndpointCollection>();
 
-            var openApiDocument = OpenApiFactory.Create(catalog, configuration);
+            var openApiDocument = OpenApiFactory.Create(endpoints, configuration);
 
             if (configuration.PostProcess is not null)
                 configuration.PostProcess(openApiDocument);

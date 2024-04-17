@@ -21,8 +21,8 @@ public class JsonRpcRequestResult(JsonRpcRequest? Value, JsonRpcErrorResponse? E
 
         if (errorResponse is null)
         {
-            var catalog = context.RequestServices.GetRequiredService<EndpointCatalog>();
-            if (!catalog.Exist(request!.Method))
+            var endpoints = context.RequestServices.GetRequiredService<IEndpointCollection>();
+            if (!endpoints.Exist(request!.Method))
             {
                 errorResponse = JsonRpcErrorResponse.MethodNotFound(request.Id, request.Method);
             }

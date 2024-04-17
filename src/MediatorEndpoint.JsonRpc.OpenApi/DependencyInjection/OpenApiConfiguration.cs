@@ -2,7 +2,7 @@
 using NSwag;
 using System.Text.Json;
 
-namespace MediatorEndpoint.JsonRpc.OpenApi;
+namespace Microsoft.Extensions.DependencyInjection;
 public class OpenApiConfiguration
 {
     public string RoutePrefix { get; set; } = "/openapi";

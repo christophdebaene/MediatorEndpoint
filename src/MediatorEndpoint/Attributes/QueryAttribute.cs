@@ -2,10 +2,10 @@
 
 namespace MediatorEndpoint;
 
-public class QueryAttribute : RequestTypeAttribute
+public class QueryAttribute : RequestKindAttribute
 {
-    public QueryAttribute() : base(RequestType.Query)
+    public QueryAttribute() : base(RequestKind.Query)
     {
     }
-    public static bool Is(Type type) => Get(type) == RequestType.Query;
+    public static bool Is(Type type) => Get(type) == RequestKind.Query;
 }

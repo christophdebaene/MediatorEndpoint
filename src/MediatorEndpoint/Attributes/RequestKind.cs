@@ -1,7 +1,7 @@
 ﻿namespace MediatorEndpoint;
-public enum RequestType
+public enum RequestKind
 {
-    Unknown = 0,
+    Undefined = 0,
     Query = 1,
     Command = 2
 }

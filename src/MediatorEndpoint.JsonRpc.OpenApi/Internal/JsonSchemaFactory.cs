@@ -4,28 +4,25 @@ using NJsonSchema.Generation;
 using NSwag;
 
 namespace MediatorEndpoint.JsonRpc.OpenApi;
-
 internal class JsonSchemaFactory(OpenApiDocument document, JsonSchemaGeneratorSettings settings)
 {
     private readonly JsonSchemaGenerator _generator = new(settings);
     private readonly OpenApiSchemaResolver _resolver = new(document, settings);
 
-    public void ScanCatalog(EndpointCatalog catalog)
+    public JsonSchema GetOrCreate(Type type) => _generator.Generate(type, _resolver);
+
+    public void ScanCatalog(IEndpointCollection endpoints)
     {
-        foreach (var requestInfo in catalog.Endpoints)
+        foreach (var endpoint in endpoints)
         {
-            GetOrCreate(requestInfo.RequestType);
-            if (requestInfo.ResponseType is not null)
-                GetOrCreate(requestInfo.ResponseType);
+            GetOrCreate(endpoint.RequestType);
+            if (endpoint.ResponseType is not null)
+                GetOrCreate(endpoint.ResponseType);
         }
     }
-    public JsonSchema GetOrCreate(Type type)
+    public JsonSchema CreateJsonRpcResponse(Endpoint endpoint)
     {
-        return _generator.Generate(type, _resolver);
-    }
-    public JsonSchema CreateJsonRpcResponse(EndpointInfo requestInfo)
-    {
-        if (requestInfo.ResponseType is null)
+        if (endpoint.ResponseType is null)
         {
             return new JsonSchemaProperty
             {
@@ -35,7 +32,7 @@ internal class JsonSchemaFactory(OpenApiDocument document, JsonSchemaGeneratorSe
         }
         else
         {
-            return GetOrCreate(requestInfo.ResponseType);
+            return GetOrCreate(endpoint.ResponseType);
         }
 
         /*
@@ -81,7 +78,7 @@ internal class JsonSchemaFactory(OpenApiDocument document, JsonSchemaGeneratorSe
         return jsonSchema;
         */
     }
-    public JsonSchema CreateJsonRpcRequest(EndpointInfo requestInfo)
+    public JsonSchema CreateJsonRpcRequest(Endpoint endpoint)
     {
         var jsonSchema = new JsonSchema
         {
@@ -110,7 +107,7 @@ internal class JsonSchemaFactory(OpenApiDocument document, JsonSchemaGeneratorSe
                     "method",
                     new JsonSchemaProperty
                     {
-                        Default = requestInfo.Name.ToString(),
+                        Default = endpoint.Name.ToString(),
                         Type = JsonObjectType.String,
                         IsRequired = true,
                     }
@@ -119,7 +116,7 @@ internal class JsonSchemaFactory(OpenApiDocument document, JsonSchemaGeneratorSe
                     "params",
                     new JsonSchemaProperty
                     {
-                        Reference = GetOrCreate(requestInfo.RequestType)
+                        Reference = GetOrCreate(endpoint.RequestType)
                     }
                 },
             }

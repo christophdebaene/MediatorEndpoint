@@ -1,9 +1,9 @@
-﻿using MediatorEndpoint.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 
 namespace MediatorEndpoint.Metadata;
 
 public interface IEndpointProvider
 {
-    IEnumerable<EndpointInfo> Resolve(MediatorEndpointConfiguration configuration);
+    IEnumerable<Endpoint> Resolve(MediatorEndpointConfiguration configuration);
 }

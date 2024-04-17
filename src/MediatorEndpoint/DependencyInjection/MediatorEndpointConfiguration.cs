@@ -1,14 +1,18 @@
-﻿using MediatorEndpoint.Metadata;
+﻿using MediatorEndpoint;
+using MediatorEndpoint.Metadata;
+using MediatorEndpoint.Metadata.Providers;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace MediatorEndpoint.DependencyInjection;
+namespace Microsoft.Extensions.DependencyInjection;
 public class MediatorEndpointConfiguration
 {
     internal List<Assembly> AssembliesToRegister { get; } = [];
-    public bool VerifyRequestType { get; set; } = true;
+    public bool VerifyRequestKind { get; set; } = true;
     public Func<Type, RequestName> RequestName { get; set; } = x => new RequestName(null, null, x.Name);
+    public Func<Type, RequestKind> RequestKind { get; set; } = RequestKindAttribute.Get;
+    public Func<Type, bool> RequestEvaluator { get; set; } = x => true;
     public IEndpointProvider EndpointProvider { get; set; } = new MediatREndpointProvider();
     public MediatorEndpointConfiguration RegisterServicesFromAssemblies(params Assembly[] assemblies)
     {

@@ -1,5 +1,4 @@
 using MediatorEndpoint;
-using MediatorEndpoint.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using NScalar;
 using Sample.Api.Endpoints;
@@ -7,28 +6,34 @@ using Sample.Application;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
-var assemblies = new List<Assembly> { Assembly.Load("Sample.Application") }.ToArray();
+var assemblies = new List<Assembly> { Assembly.Load("MediatRSample.Application") }.ToArray();
 
+builder.Services.AddHttpClient();
 builder.Services.AddDbContext<ApplicationContext>(options =>
 {
     options.UseInMemoryDatabase("Sample");
 });
 
-builder.Services.ConfigureHttpJsonOptions(options =>
+
+builder.Services.AddMediatR(cfg =>
 {
+    cfg.RegisterServicesFromAssemblies(assemblies);
 });
 
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(assemblies));
 builder.Services.AddMediatorEndpoint(cfg =>
 {
     cfg.RegisterServicesFromAssemblies(assemblies);
     cfg.RequestName = type => new RequestName("MyApp", type.Namespace!.Split(".").Last(), type.Name);
 });
-//builder.Services.AddJsonRpcOpenApi((config) => { });
+
+builder.Services.AddJsonRpcOpenApi((config) => { });
 
 var app = builder.Build();
-app.UseScalar();
-//app.UseJsonRpcOpenApi();
+app.UseScalar(cfg =>
+{
+    cfg.ProxyUrl = "/scalarproxy";
+});
+app.UseJsonRpcOpenApi();
 app.MapJsonRpc();
 app.MapScalar();
 

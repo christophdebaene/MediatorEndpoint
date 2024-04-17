@@ -1,9 +1,9 @@
-﻿using MediatorEndpoint.Metadata;
-using Microsoft.Extensions.DependencyInjection;
+﻿using MediatorEndpoint;
+using MediatorEndpoint.Metadata;
 using System;
 using System.Linq;
 
-namespace MediatorEndpoint.DependencyInjection;
+namespace Microsoft.Extensions.DependencyInjection;
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddMediatorEndpoint(this IServiceCollection services, Action<MediatorEndpointConfiguration> configuration)
@@ -19,15 +19,17 @@ public static class ServiceCollectionExtensions
             throw new ArgumentException("No assemblies found to scan. Supply at least one assembly to scan for handlers.");
         }
 
-        var endpoints = configuration.EndpointProvider.Resolve(configuration).ToList();
+        var endpoints = new EndpointCollection(configuration.EndpointProvider.Resolve(configuration).ToList());
 
-        if (configuration.VerifyRequestType)
+        if (configuration.VerifyRequestKind)
         {
-            foreach (var request in endpoints.Where(x => RequestTypeAttribute.Get(x.RequestType) == RequestType.Unknown))
-                throw new Exception($"Request {request} is unknown");
+            var request = endpoints.FirstOrDefault(x => x.Kind == RequestKind.Undefined);
+            if (request is not null)
+            {
+                throw new Exception($"Request '{request.RequestType.FullName}' has undefined RequestKind");
+            }
         }
 
-        var typeCatalog = new EndpointCatalog(endpoints);
-        return services.AddSingleton(typeCatalog);
+        return services.AddSingleton<IEndpointCollection>(endpoints);
     }
 }
