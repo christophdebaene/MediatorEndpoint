@@ -1,12 +1,27 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Json;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace MediatorEndpoint.JsonRpc.Internal;
 internal static class HttpExtensions
 {
+    public static JsonSerializerOptions GetSerializerOptions(this HttpContext context)
+    {
+        return context.RequestServices.GetRequiredService<IOptions<JsonOptions>>().Value.SerializerOptions;
+    }
+    public static async Task<string?> GetBodyOrFormStringAsync(this HttpRequest request)
+    {
+        return request.HasFormContentType
+           ? request.Form["jsonrpc"].FirstOrDefault()
+           : await request.GetRawBodyStringAsync();
+    }
     public static async Task<IReadOnlyList<IFormFile>> BindFilesAsync(this HttpRequest request)
     {
         var files = new List<IFormFile>();

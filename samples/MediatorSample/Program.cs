@@ -1,6 +1,6 @@
 using MediatorEndpoint;
 using MediatorEndpoint.Metadata.Providers;
-using MediatorSample.Endpoints;
+using Sample.Api.Endpoints;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);

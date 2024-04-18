@@ -1,0 +1,78 @@
+@Api_HostAddress = http://localhost:5100/jsonrpc
+
+### Id Missing
+POST {{Api_HostAddress}}
+Content-Type: application/json
+
+{
+  "jsonrpc": "2.0",
+  "method": "MyApp.Calculator.Add",
+  "params": {
+    "X": 5,
+    "Y": 8
+  }
+}
+
+### JsonRpc Version Missing
+POST {{Api_HostAddress}}
+Content-Type: application/json
+
+{
+  "id": "{{$guid}}",
+  "method": "MyApp.Calculator.Add",
+  "params": {
+    "X": 5,
+    "Y": 8
+  }
+}
+
+### JsonRpc Version Must be 2.0
+POST {{Api_HostAddress}}
+Content-Type: application/json
+
+{
+  "id": "{{$guid}}",
+  "jsonrpc": "1",
+  "method": "MyApp.Calculator.Add",
+  "params": {
+    "X": 5,
+    "Y": 8
+  }
+}
+
+### Method is missing
+POST {{Api_HostAddress}}
+Content-Type: application/json
+
+{
+  "id": "{{$guid}}",
+  "jsonrpc": "2.0",
+  "params": {
+    "X": 5,
+    "Y": 8
+  }
+}
+
+### Params must be an object or array
+POST {{Api_HostAddress}}
+Content-Type: application/json
+
+{
+  "id": "{{$guid}}",
+  "jsonrpc": "2.0",
+  "method": "MyApp.Calculator.Add",
+  "params": 5
+}
+
+### Unknown Method
+POST {{Api_HostAddress}}
+Content-Type: application/json
+
+{
+  "id": "{{$guid}}",
+  "jsonrpc": "2.0",
+  "method": "MyApp.Users.GetUser",
+  "params": {
+    "Id": "{{$guid}}"
+  }
+}

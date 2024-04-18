@@ -1,37 +1,38 @@
 ﻿using MediatorEndpoint.JsonRpc.Internal;
 using MediatorEndpoint.Metadata;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Json;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace MediatorEndpoint.JsonRpc;
-public class JsonRpcEndpoint
+public class JsonRpc
 {
     public Metadata.Endpoint Endpoint { get; init; }
     public JsonRpcRequest Request { get; init; }
-    public JsonRpcEndpoint(Metadata.Endpoint endpoint, JsonRpcRequest request)
+    public JsonRpc(Metadata.Endpoint endpoint, JsonRpcRequest request)
     {
         Endpoint = endpoint;
         Request = request;
     }
+    public static async ValueTask<JsonRpc?> BindAsync(HttpContext context)
+    {
+        var jsonRpcRequest = await JsonRpcRequest.BindAsync(context);
+        if (jsonRpcRequest is null)
+        {
+            return null;
+        }
+
+        var endpoints = context.RequestServices.GetRequiredService<IEndpointCollection>();
+        return new JsonRpc(endpoints[jsonRpcRequest.Method!], jsonRpcRequest);
+    }
     public async Task<object?> CreateMessage(HttpContext context)
     {
-        var serializerOptions = context.RequestServices.GetRequiredService<IOptions<JsonOptions>>().Value.SerializerOptions;
-
         var request = Request.Params.ValueKind == JsonValueKind.Undefined ?
            Activator.CreateInstance(Endpoint.RequestType) :
-           JsonSerializer.Deserialize(Request.Params, Endpoint.RequestType, serializerOptions);
-
-        if (request is IHaveId iHaveId)
-            iHaveId.Id = Request.Id;
-
-        if (request is IHaveParams iHaveParams)
-            iHaveParams.Params = Request.Params;
+           JsonSerializer.Deserialize(Request.Params, Endpoint.RequestType, context.GetSerializerOptions());
 
         if (request is IFileRequest fileRequest)
         {

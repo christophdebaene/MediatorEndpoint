@@ -43,6 +43,9 @@
   <ItemGroup>
     <ProjectReference Include="..\MediatorEndpoint\MediatorEndpoint.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DependencyInjection\" />
+  </ItemGroup>
 
   <Target Name="SpicNSpan" AfterTargets="Clean">
     <RemoveDir Directories="$(TargetDir)" />    

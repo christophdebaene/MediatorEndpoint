@@ -33,6 +33,34 @@ Content-Type: application/json
   "method": "MyApp.Scenarios.JsonResponseRequest"
 }
 
+### ExtensionData
+POST {{Api_HostAddress}}
+Content-Type: application/json
+
+{
+  "id": "{{$guid}}",
+  "jsonrpc": "2.0",
+  "method": "MyApp.Scenarios.ExtensionData",
+  "params": {
+    "X" : "5",
+    "Y" : 4,
+    "Z": {
+        "A": "5",
+        "B": "6"
+    }
+  }
+}
+
+### ThrowException
+POST {{Api_HostAddress}}
+Content-Type: application/json
+
+{
+  "id": "{{$guid}}",
+  "jsonrpc": "2.0",
+  "method": "MyApp.Scenarios.ThrowException"
+}
+
 ### UploadFiles
 POST {{Api_HostAddress}}
 Content-Type: multipart/form-data; boundary=boundary
