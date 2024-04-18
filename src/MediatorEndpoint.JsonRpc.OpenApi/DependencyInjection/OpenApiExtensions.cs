@@ -33,7 +33,7 @@ public static class OpenApiExtensions
 
             var endpoints = serviceProvider.GetRequiredService<IEndpointCollection>();
 
-            var openApiDocument = OpenApiFactory.Create(endpoints, configuration);
+            var openApiDocument = OpenApiUtil.Create(endpoints, configuration);
 
             if (configuration.PostProcess is not null)
                 configuration.PostProcess(openApiDocument);

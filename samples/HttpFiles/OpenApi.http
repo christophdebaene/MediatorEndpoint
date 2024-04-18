@@ -1,0 +1,5 @@
+@Api_HostAddress = http://localhost:5100
+
+### NoResponse
+GET {{Api_HostAddress}}/openapi
+Content-Type: application/json
