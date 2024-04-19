@@ -28,7 +28,7 @@ public class JsonRpc
         var endpoints = context.RequestServices.GetRequiredService<IEndpointCollection>();
         return new JsonRpc(endpoints[jsonRpcRequest.Method!], jsonRpcRequest);
     }
-    public async Task<object?> CreateMessage(HttpContext context)
+    public async Task<object?> CreateMessageAsync(HttpContext context)
     {
         var request = Request.Params.ValueKind == JsonValueKind.Undefined ?
            Activator.CreateInstance(Endpoint.RequestType) :

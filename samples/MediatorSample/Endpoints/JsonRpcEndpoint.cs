@@ -12,7 +12,7 @@ public static class JsonRpcEndpoint
 
             try
             {
-                var message = await jsonRpc!.CreateMessage(context);
+                var message = await jsonRpc!.CreateMessageAsync(context);
                 Console.WriteLine(message ?? "".ToString());
 
                 var response = await sender.Send(message, cancellationToken);
