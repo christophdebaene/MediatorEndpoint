@@ -8,4 +8,5 @@ public record Endpoint
     public required RequestKind Kind { get; init; }
     public required Type RequestType { get; init; }
     public required Type? ResponseType { get; init; }
+    public override string ToString() => Name.ToString();
 };

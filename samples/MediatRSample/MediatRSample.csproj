@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.4" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\src\MediatorEndpoint.JsonRpc.OpenApi\MediatorEndpoint.JsonRpc.OpenApi.csproj" />
     <ProjectReference Include="..\..\src\MediatorEndpoint.JsonRpc\MediatorEndpoint.JsonRpc.csproj" />
     <ProjectReference Include="..\..\src\MediatorEndpoint\MediatorEndpoint.csproj" />

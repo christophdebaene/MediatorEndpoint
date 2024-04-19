@@ -6,7 +6,38 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <Copyright>Copyright Christoph De Baene</Copyright>
+    <PackageProjectUrl>https://github.com/christophdebaene/MediatorEndpoint</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/christophdebaene/MediatorEndpoint</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Authors>Christoph De Baene</Authors>
+    <Description>MediatorEndpoint enables to expose MediatR/Mediator requests as a JSON-RPC service</Description>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Deterministic>true</Deterministic>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <MinVerIgnoreHeight>true</MinVerIgnoreHeight>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+    <MinVerVerbosity>normal</MinVerVerbosity>
+  </PropertyGroup>
+  
+
   <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="MinVer" Version="5.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="NJsonSchema" Version="11.0.0" />
     <PackageReference Include="NSwag.Core.Yaml" Version="14.0.7" />
   </ItemGroup>
@@ -16,5 +47,10 @@
   <ItemGroup>
     <ProjectReference Include="..\MediatorEndpoint\MediatorEndpoint.csproj" />
   </ItemGroup>
+
+  <Target Name="SpicNSpan" AfterTargets="Clean">
+    <RemoveDir Directories="$(TargetDir)" />
+    <RemoveDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)" />
+  </Target>
 
 </Project>

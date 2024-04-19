@@ -3,7 +3,7 @@ using NJsonSchema;
 using NSwag;
 
 namespace MediatorEndpoint.JsonRpc.OpenApi.Internal;
-internal static class JsonRpcUtil
+internal static class SchemaUtil
 {
     public static OpenApiOperation CreateOperation(Endpoint endpoint, JsonSchema requestSchema, JsonSchema responseSchema)
     {
@@ -79,8 +79,11 @@ internal static class JsonRpcUtil
             }
         };
     }
-    public static JsonSchema CreateResponseSchema(JsonSchema? responseSchema)
+    public static JsonSchema? CreateResponseSchema(JsonSchema? responseSchema)
     {
+        return responseSchema;
+
+        /*
         return new JsonSchema
         {
             Type = JsonObjectType.Object,
@@ -119,5 +122,6 @@ internal static class JsonRpcUtil
                 }
             }
         };
+        */
     }
 }

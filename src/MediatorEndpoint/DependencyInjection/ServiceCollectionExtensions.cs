@@ -19,7 +19,7 @@ public static class ServiceCollectionExtensions
             throw new ArgumentException("No assemblies found to scan. Supply at least one assembly to scan for handlers.");
         }
 
-        var endpoints = new EndpointCollection(configuration.EndpointProvider.Resolve(configuration).ToList());
+        var endpoints = new EndpointCollection(configuration.EndpointProvider.Resolve(configuration));
 
         if (configuration.VerifyRequestKind)
         {

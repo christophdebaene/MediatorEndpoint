@@ -12,7 +12,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Authors>Christoph De Baene</Authors>
-    <Description>MediatorEndpoint is a library that exposes MediatR requests/response as a JSON-RPC service</Description>
+    <Description>MediatorEndpoint enables to expose MediatR/Mediator requests as a JSON-RPC service</Description>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <Deterministic>true</Deterministic>

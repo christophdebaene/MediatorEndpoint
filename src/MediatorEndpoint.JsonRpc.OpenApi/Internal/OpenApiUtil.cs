@@ -15,7 +15,7 @@ internal class OpenApiUtil
         };
 
         var schemaResolver = new JsonSchemaResolver(document, configuration.Settings);
-        schemaResolver.Scan(endpoints);
+        //schemaResolver.Scan(endpoints);
 
         document.Info = new OpenApiInfo
         {
@@ -28,19 +28,16 @@ internal class OpenApiUtil
 
         foreach (var endpoint in endpoints.OrderBy(x => x.Name.ServiceName))
         {
-            var requestSchema = JsonRpcUtil.CreateRequestSchema(endpoint.Name.ToString(), schemaResolver.GetOrCreate(endpoint.RequestType));
-            var responseSchema = JsonRpcUtil.CreateResponseSchema(schemaResolver.GetOrCreate(endpoint.ResponseType));
+            var requestSchema = SchemaUtil.CreateRequestSchema(endpoint.Name.ToString(), schemaResolver.GetOrCreate(endpoint.RequestType));
+            var responseSchema = SchemaUtil.CreateResponseSchema(schemaResolver.GetOrCreate(endpoint.ResponseType));
 
-            if (responseSchema is not null)
+            document.Paths.Add($"/{endpoint.Name.ServiceName}/{endpoint.Name.Name}", new OpenApiPathItem
             {
-                document.Paths.Add($"/{endpoint.Name.ServiceName}/{endpoint.Name.Name}", new OpenApiPathItem
                 {
-                    {
-                        OpenApiOperationMethod.Post,
-                        JsonRpcUtil.CreateOperation(endpoint, requestSchema, responseSchema)
-                    }
-                });
-            }
+                    OpenApiOperationMethod.Post,
+                    SchemaUtil.CreateOperation(endpoint, requestSchema, responseSchema)
+                }
+            });
         }
 
         return document;

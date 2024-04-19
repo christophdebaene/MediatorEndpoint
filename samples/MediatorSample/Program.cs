@@ -1,15 +1,13 @@
 using MediatorEndpoint;
 using MediatorEndpoint.Metadata.Providers;
+using NScalar;
 using Sample.Api.Endpoints;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 var assemblies = new List<Assembly> { Assembly.Load("MediatorSample.Application") }.ToArray();
 
-builder.Services.ConfigureHttpJsonOptions(options =>
-{
-});
-
+builder.Services.AddHttpClient();
 builder.Services.AddMediator();
 builder.Services.AddMediatorEndpoint(cfg =>
 {
@@ -18,6 +16,14 @@ builder.Services.AddMediatorEndpoint(cfg =>
     cfg.EndpointProvider = new MediatorEndpointProvider();
 });
 
+builder.Services.AddJsonRpcOpenApi((config) => { });
 var app = builder.Build();
+app.UseScalar(cfg =>
+{
+    cfg.ProxyUrl = "/scalarproxy";
+});
+app.UseJsonRpcOpenApi();
 app.MapJsonRpc();
+app.MapScalar();
+
 app.Run();

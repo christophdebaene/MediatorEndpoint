@@ -5,5 +5,5 @@ namespace MediatorEndpoint.Metadata;
 
 public interface IEndpointProvider
 {
-    IEnumerable<Endpoint> Resolve(MediatorEndpointConfiguration configuration);
+    IReadOnlyList<Endpoint> Resolve(MediatorEndpointConfiguration configuration);
 }

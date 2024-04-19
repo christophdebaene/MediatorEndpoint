@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,22 +6,25 @@ namespace MediatorEndpoint.Metadata.Providers;
 
 public class MediatREndpointProvider : IEndpointProvider
 {
-    public IEnumerable<Endpoint> Resolve(MediatorEndpointConfiguration configuration)
+    public IReadOnlyList<Endpoint> Resolve(MediatorEndpointConfiguration configuration)
     {
-        return configuration.AssembliesToRegister
-            .GetTypes(configuration.RequestEvaluator)
-            .Where(x => x.ImplementsInterface("MediatR.IBaseRequest"))
-            .Select(x => new Endpoint
+        var endpoints = new List<Endpoint>();
+
+        foreach (var type in configuration.AssembliesToRegister.GetTypes(configuration.RequestEvaluator))
+        {
+            var interfaceType = type.GetInterfaceOrDefault("MediatR", "IRequest", "IRequest`1");
+            if (interfaceType is not null)
             {
-                Name = configuration.RequestName(x),
-                Kind = configuration.RequestKind(x),
-                RequestType = x,
-                ResponseType = GetResponseType(x)
-            });
-    }
-    static Type? GetResponseType(Type requestType)
-    {
-        var requestInterface = requestType.GetInterface("IRequest`1");
-        return requestInterface?.GetGenericArguments().SingleOrDefault(type => type.FullName != "MediatR.Unit");
+                endpoints.Add(new Endpoint
+                {
+                    Name = configuration.RequestName(type),
+                    Kind = configuration.RequestKind(type),
+                    RequestType = type,
+                    ResponseType = interfaceType.GetGenericArguments().SingleOrDefault(type => type.FullName != "MediatR.Unit")
+                });
+            }
+        }
+
+        return endpoints;
     }
 }

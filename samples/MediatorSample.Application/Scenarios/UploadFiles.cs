@@ -1,26 +1,24 @@
-﻿using MediatorEndpoint;
-using MediatR;
-using Sample.Application.Tasks.Types;
+﻿using Mediator;
+using MediatorEndpoint;
 using System.Text.Json.Serialization;
 
 namespace Sample.Application.Scenarios;
 
-[Command]
-public record UploadFiles : IRequest, IFileRequest
+public record UploadFiles : ICommand, IFileRequest
 {
     public string SetName { get; init; }
 
     [JsonIgnore]
     public IReadOnlyList<IFile> Files { get; set; }
 }
-public class UploadFilesHandler : IRequestHandler<UploadFiles>
+public class UploadFilesHandler : ICommandHandler<UploadFiles>
 {
-    public Task Handle(UploadFiles request, CancellationToken cancellationToken)
+    public async ValueTask<Unit> Handle(UploadFiles request, CancellationToken cancellationToken)
     {
         var documents = new List<Document>();
         foreach (var file in request.Files)
         {
-            var data = file.ReadAsBytes();
+            var data = await file.ReadAsBytesAsync();
             documents.Add(new Document
             {
                 SetName = request.SetName,
@@ -31,6 +29,7 @@ public class UploadFilesHandler : IRequestHandler<UploadFiles>
         }
 
         DocumentSet.Documents.AddRange(documents);
-        return Task.CompletedTask;
+
+        return Unit.Value;
     }
 }

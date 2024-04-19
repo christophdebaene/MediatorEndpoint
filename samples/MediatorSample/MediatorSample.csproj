@@ -14,7 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\MediatorEndpoint.JsonRpc.OpenApi\MediatorEndpoint.JsonRpc.OpenApi.csproj" />
     <ProjectReference Include="..\..\src\MediatorEndpoint.JsonRpc\MediatorEndpoint.JsonRpc.csproj" />
+    <ProjectReference Include="..\..\src\NScalar\NScalar.csproj" />
     <ProjectReference Include="..\MediatorSample.Application\MediatorSample.Application.csproj" />
   </ItemGroup>
 

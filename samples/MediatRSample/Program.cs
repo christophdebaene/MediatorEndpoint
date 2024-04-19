@@ -1,20 +1,12 @@
 using MediatorEndpoint;
-using Microsoft.EntityFrameworkCore;
 using NScalar;
 using Sample.Api.Endpoints;
-using Sample.Application;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 var assemblies = new List<Assembly> { Assembly.Load("MediatRSample.Application") }.ToArray();
 
 builder.Services.AddHttpClient();
-builder.Services.AddDbContext<ApplicationContext>(options =>
-{
-    options.UseInMemoryDatabase("Sample");
-});
-
-
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssemblies(assemblies);
