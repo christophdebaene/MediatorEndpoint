@@ -22,7 +22,7 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration Release --no-restore
-    - name: Push package to NuGet
+    - name: Create NuGet package
       run: dotnet pack --configuration Release --output ${{env.NuGetDirectory}}
     - uses: actions/upload-artifact@v4
       with:
@@ -32,3 +32,8 @@ jobs:
         path: |
           ${{env.NuGetDirectory}}/*.nupkg
           ${{env.NuGetDirectory}}/*.snupkg
+    - name: Push all NuGet packages
+      run: |
+        foreach($file in (Get-ChildItem "${{ env.NuGetDirectory }}" -Recurse -Include ("*.nupkg", "*.snupkg")) {
+              dotnet nuget push $file --api-key "${{ secrets.NUGET_TOKEN }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+        }
