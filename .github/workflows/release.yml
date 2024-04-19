@@ -34,6 +34,6 @@ jobs:
           ${{env.NuGetDirectory}}/*.snupkg
     - name: Push all NuGet packages
       run: |
-        foreach($file in (Get-ChildItem "${{ env.NuGetDirectory }}" -Recurse -Include ("*.nupkg", "*.snupkg")) {
+        foreach($file in (Get-ChildItem "${{ env.NuGetDirectory }}" -Recurse -Include ("*.nupkg", "*.snupkg"))) {
               dotnet nuget push $file --api-key "${{ secrets.NUGET_TOKEN }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
         }
