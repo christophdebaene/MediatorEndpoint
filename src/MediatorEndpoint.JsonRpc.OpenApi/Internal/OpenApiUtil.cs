@@ -15,7 +15,7 @@ internal class OpenApiUtil
         };
 
         var schemaResolver = new JsonSchemaResolver(document, configuration.Settings);
-        //schemaResolver.Scan(endpoints);
+        schemaResolver.Scan(endpoints);
 
         document.Info = new OpenApiInfo
         {
