@@ -1,0 +1,68 @@
+{{ capture output -}}
+{{- ClientName = "MediatRSample"}}
+{{- requests = data.Classes | Custom.MediatorRequests }}
+{{- dtos = requests | Custom.AllReferencedTypes }}
+export namespace Model {
+
+    export type JsonElement = any;
+    export type JObject = any;
+    export type JsonResponse = any;
+    export type Unit = void;
+    
+    {{- for enum in dtos | Custom.IsEnum }}
+    export type {{enum.Name}} = {{enum | Custom.ToTsEnumValues}};
+    {{ end }}
+    
+    {{- for class in dtos | Custom.IsClass }}
+    export interface {{class.Name}}
+    {    
+        {{- for property in class.Properties | Symbols.ThatArePublic | Symbols.ThatDoNotHaveAttribute("JsonIgnore") }}
+            {{ property.Name }}: {{ property.Type | Custom.ToTsType }};
+        {{- end }}
+    }
+    {{ end }}
+
+    {{- for service in requests | Custom.MediatorRequestsByService  }}
+    export class {{service.Key}}Service {
+    
+        private readonly jsonRpc: JsonRpcService;
+
+        constructor(jsonRpc: JsonRpcService) {
+            this.jsonRpc = jsonRpc;
+        }
+
+        {{~ for operation in service }}
+        {{operation.Request.BareName}} = (request: {{operation.Request.BareName}}) => this.jsonRpc.send<{{operation.Response | Custom.ToTsType }}>('{{operation.Name}}', request);
+        {{- end }}
+    }
+    {{- end }}
+
+    export class {{ClientName}}Client {
+
+        public JsonRpc: JsonRpcService;
+
+        {{- for service in requests | Custom.MediatorRequestsByService  }}
+        public {{service.Key}}: {{service.Key}}Service;
+        {{- end }}
+
+        constructor(jsonRpc: JsonRpcService) {
+            this.JsonRpc = jsonRpc;
+            {{- for service in requests | Custom.MediatorRequestsByService  }}
+            this.{{service.Key}} = new {{service.Key}}Service(this.JsonRpc);
+            {{- end }}
+        }
+    }
+
+    export type FileType = string | { Filename: string, Data: Buffer };
+
+    export interface JsonRpcService
+    {
+        send<T>(methodName: string, params: any) : Promise<T>;
+        upload<T = void>(methodName: string, params: any, files: FileType[]): Promise<T>;
+        download(methodName: string, params?: any) : any;
+    }
+}
+
+{{ end }}
+{{ filePath = "./Clients/" | String.Append ClientName | String.Append "Client.ts" }}
+{{ Save output filePath }}
